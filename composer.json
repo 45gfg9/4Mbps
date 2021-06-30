@@ -1,0 +1,17 @@
+{
+  "name": "45gfg9/4mbps",
+  "description": "45gfg9's Minecraft Blog ParSer",
+  "type": "project",
+  "require": {
+    "voku/portable-utf8": "^5.4",
+    "voku/simple_html_dom": "^4.7",
+    "ext-curl": "*"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "45gfg9",
+      "email": "mc45@qq.com"
+    }
+  ]
+}
