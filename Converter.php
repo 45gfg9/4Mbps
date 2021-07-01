@@ -137,10 +137,6 @@ class Converter {
         }
     }
 
-    /* private function dt(): string {
-        return '';
-    } */
-
     private function dl(Node $node): string {
         static $NAMED = true;
 
@@ -270,54 +266,25 @@ class Converter {
     }
 
     private function convert(Node $node): string {
-		return match ($node->tag) {
-			'a'=> $this->a($node),
-			'b', 'strong' => $this->b($node),
-			'blockquote' => $this->blockquote($node),
-			'br' => $this->br(),
-			'cite' => $this->cite($node),
- 			'code' => $this->code($node),
- 			'div' => $this->div($node),
-			'dd' => $this->dd($node),
- 			'dl' => $this->dl($node),
- 			'i', 'em' => $this->i($node),
- 			'img' => $this->img($node),
- 			'li' => $this->li($node),
- 			'ol' => $this->ol($node),
- 			'p' => $this->p($node),
- 			'span' => $this->span($node),
- 			'table' => $this->table($node),
- 			'tbody' => $this->tbody($node),
- 			'td' => $this->td($node),
- 			'tr' => $this->tr($node),
- 			'ul' => $this->ul($node),
-			'h1', 'h2', 'h3', 'h4', 'h5' => $this->h(substr($node->tag,1), $node),
-			'script', 'button', 'nav', 'svg', 'dt' => '',
-			// TODO: "#text", 'picture' impl.
-			// print_r always return true
-			default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>") ? $node->text : '')
-		};
+        // More magical impl in less than 20 lines.
+        // By KawaiiZapic
 
-    	/* More magical impl in less than 20 lines.
-
-    	$tag = $node->tag;
-    	$replacement = [
-    		'strong' => 'b',
-			'section' => 'div',
-			'em' => 'i'
-		];
-		$tag = str_replace(array_keys($replacement), array_values($replacement), $tag);
-    	return match ($tag) {
-			'a', 'b', 'blockquote', 'br', 'cite', 'code', 
-    		'div', 'dd', 'dl', 'dt', 'i', 'img', 'li', 'ol', 
-    		'p', 'span', 'table', 'tbody', 'td', 'tr', 'ul' => $this->$tag($node),
-			'h1', 'h2', 'h3', 'h4', 'h5' => $this->h(substr($tag,1), $node),
-			'script', 'button', 'nav', 'svg' => '',
-			// TODO: "#text", 'picture' impl.
-			// print_r always return true
-			default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>") ? $node->text : '')
-		};
-
-    	*/
+        $tag = $node->tag;
+        $alias = [
+            'strong' => 'b',
+            'section' => 'div',
+            'em' => 'i'
+        ];
+        $tag = str_replace(array_keys($alias), array_values($alias), $tag);
+        return match ($tag) {
+            'a', 'b', 'blockquote', 'br', 'cite', 'code',
+            'div', 'dd', 'dl', 'i', 'img', 'li', 'ol',
+            'p', 'span', 'table', 'tbody', 'td', 'tr', 'ul' => $this->$tag($node),
+            'h1', 'h2', 'h3', 'h4', 'h5' => $this->h(substr($tag, 1), $node),
+            'dt', 'script', 'button', 'nav', 'svg' => '',
+            '#text', 'picture' => $node->text,
+            // print_r always return true
+            default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>") ? $node->text : '')
+        };
     }
 }
