@@ -137,9 +137,9 @@ class Converter {
         }
     }
 
-    private function dt(): string {
+    /* private function dt(): string {
         return '';
-    }
+    } */
 
     private function dl(Node $node): string {
         static $NAMED = true;
@@ -270,73 +270,54 @@ class Converter {
     }
 
     private function convert(Node $node): string {
-        switch ($node->tag) {
-            case 'a':
-                return $this->a($node);
-            case 'b':
-            case 'strong':
-                return $this->b($node);
-            case 'blockquote':
-                return $this->blockquote($node);
-            case 'br':
-                return $this->br();
-            case 'cite':
-                return $this->cite($node);
-            case 'code':
-                return $this->code($node);
-            case 'div':
-            case 'section':
-                return $this->div($node);
-            case 'dd':
-                return $this->dd($node);
-            case 'dl':
-                return $this->dl($node);
-            case 'dt':
-                return $this->dt();
-            case 'em':
-            case 'i':
-                return $this->i($node);
-            case 'h1':
-                return $this->h(1, $node);
-            case 'h2':
-                return $this->h(2, $node);
-            case 'h3':
-                return $this->h(3, $node);
-            case 'h4':
-                return $this->h(4, $node);
-            case 'h5':
-                return $this->h(5, $node);
-            case 'img':
-                return $this->img($node);
-            case 'li':
-                return $this->li($node);
-            case 'ol':
-                return $this->ol($node);
-            case 'p':
-                return $this->p($node);
-            case 'span':
-                return $this->span($node);
-            case 'table':
-                return $this->table($node);
-            case 'tbody':
-                return $this->tbody($node);
-            case 'td':
-                return $this->td($node);
-            case 'tr':
-                return $this->tr($node);
-            case 'ul':
-                return $this->ul($node);
-            case 'script':
-            case 'button':
-            case 'nav':
-            case 'svg':
-                return '';
-            /** @noinspection PhpMissingBreakStatementInspection */
-            default:
-                echo "<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>";
-            case '#text':
-            case 'picture': // SPX undone
-                return $node->text;
-        }
+		return match ($node->tag) {
+			'a'=> $this->a($node),
+			'b', 'strong' => $this->b($node),
+			'blockquote' => $this->blockquote($node),
+			'br' => $this->br(),
+			'cite' => $this->cite($node),
+ 			'code' => $this->code($node),
+ 			'div' => $this->div($node),
+			'dd' => $this->dd($node),
+ 			'dl' => $this->dl($node),
+ 			'i', 'em' => $this->i($node),
+ 			'img' => $this->img($node),
+ 			'li' => $this->li($node),
+ 			'ol' => $this->ol($node),
+ 			'p' => $this->p($node),
+ 			'span' => $this->span($node),
+ 			'table' => $this->table($node),
+ 			'tbody' => $this->tbody($node),
+ 			'td' => $this->td($node),
+ 			'tr' => $this->tr($node),
+ 			'ul' => $this->ul($node),
+			'h1', 'h2', 'h3', 'h4', 'h5' => $this->h(substr($node->tag,1), $node),
+			'script', 'button', 'nav', 'svg', 'dt' => '',
+			// TODO: "#text", 'picture' impl.
+			// print_r always return true
+			default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>") ? $node->text : '')
+		};
+
+    	/* More magical impl in less than 20 lines.
+
+    	$tag = $node->tag;
+    	$replacement = [
+    		'strong' => 'b',
+			'section' => 'div',
+			'em' => 'i'
+		];
+		$tag = str_replace(array_keys($replacement), array_values($replacement), $tag);
+    	return match ($tag) {
+			'a', 'b', 'blockquote', 'br', 'cite', 'code', 
+    		'div', 'dd', 'dl', 'dt', 'i', 'img', 'li', 'ol', 
+    		'p', 'span', 'table', 'tbody', 'td', 'tr', 'ul' => $this->$tag($node),
+			'h1', 'h2', 'h3', 'h4', 'h5' => $this->h(substr($tag,1), $node),
+			'script', 'button', 'nav', 'svg' => '',
+			// TODO: "#text", 'picture' impl.
+			// print_r always return true
+			default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>") ? $node->text : '')
+		};
+
+    	*/
     }
 }
