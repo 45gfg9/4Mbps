@@ -1,5 +1,7 @@
 # 4Mbps
 
+![License](https://img.shields.io/github/license/45gfg9/4Mbps.svg)
+
 > *45gfg9's Minecraft Blog ParSer*
 
 Yet another Minecraft blog parser.
