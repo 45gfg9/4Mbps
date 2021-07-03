@@ -45,13 +45,13 @@ class Converter {
     }
 
     // Utility functions.
-    private function parse_head(): string {
-        $ret = "[postbg]bg5.png[/postbg][indent]";
-
-        $img = $this->dom->findOne(".article-head__image");
-        if (!($img instanceof NullNode)) {
-            $ret .= $this->convert($img);
-        }
+    private static function get_text(Node $node): string {
+        // SimpleHtmlDomInterface::text -> whitespaces trimmed
+        // DOMDocument::textContent -> weird macros
+        // This is not very graceful..
+        $text = str_replace(["\r", "\n", "\t"], '', voku\helper\AbstractDomParser::putReplacedBackToPreserveHtmlEntities($node->getNode()->textContent));
+        return str_starts_with($text, '  ') ? $node->text : $text;
+    }
 
         return $ret;
     }
@@ -282,9 +282,9 @@ class Converter {
             'p', 'span', 'table', 'tbody', 'td', 'tr', 'ul' => $this->$tag($node),
             'h1', 'h2', 'h3', 'h4', 'h5' => $this->h(substr($tag, 1), $node),
             'dt', 'script', 'button', 'nav', 'svg' => '',
-            '#text', 'picture' => $node->text,
+            '#text', 'picture' => self::get_text($node),
             // print_r always return true
-            default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>") ? $node->text : '')
+            default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>") ? self::get_text($node) : '')
         };
     }
 }
