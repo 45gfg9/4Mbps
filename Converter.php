@@ -25,7 +25,7 @@ class Converter {
     private string $translator;
     private DateTime $date;
 
-    private bool $complete = false;
+    private bool $completed = false;
     private array $contents = []; // critical nodes
     private Parser $dom;
     private int $counter = 0;
@@ -79,7 +79,7 @@ class Converter {
     private function unwrap(Node $node): string {
         $ret = '';
         foreach ($node->children() as $child) {
-            if (!$this->complete) $ret .= $this->convert($child);
+            if (!$this->completed) $ret .= $this->convert($child);
         }
         return $ret;
     }
@@ -169,8 +169,7 @@ class Converter {
             case 'get the pre-release':
             case 'get the snapshot':
             case 'get the release candidate':
-                $this->complete = true;
-                return '';
+                return $this->complete();
         }
 
         $prefix = '[size=' . (7 - $level) . '][b]';
@@ -188,8 +187,7 @@ class Converter {
 
     private function img(Node $node): string {
         if ($node->getAttribute('alt') === 'Author image') {
-            $this->complete = true;
-            return '';
+            return $this->complete();
         }
 
         $src = $this->src_url($node->getAttribute('src'));
