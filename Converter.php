@@ -1,4 +1,7 @@
-<?php /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+<?php
+/** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+
+/** @noinspection PhpUnusedPrivateMethodInspection */
 
 use voku\helper\HtmlDomParser as Parser;
 use voku\helper\SimpleHtmlDomBlank as NullNode;
@@ -14,6 +17,7 @@ use voku\helper\SimpleHtmlDomInterface as Node;
 
 class Converter {
     private const MONOSPACED = 'Monaco,Menlo,Consolas,"Courier New",monospaced';
+    private const NAMED = true;
 
     private string $title;
     private string $url;
@@ -138,10 +142,8 @@ class Converter {
     }
 
     private function dl(Node $node): string {
-        static $NAMED = true;
-
-        $ret = "\n\n{$this->unwrap($node)}";
-        if ($NAMED) $ret .= "\n[color=DarkGrey][i]Powered by [color=#388d40][u]4Mbps[/u][/color][/i][/color]\n";
+        $ret = "\n\n" . $this->unwrap($node);
+        if (self::NAMED) $ret .= "\n[color=DarkGrey][i]Powered by [color=#388d40][u]4Mbps[/u][/color][/i][/color]\n";
         return $ret;
     }
 
