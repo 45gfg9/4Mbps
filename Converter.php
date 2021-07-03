@@ -1,6 +1,5 @@
 <?php
 /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
-
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use voku\helper\HtmlDomParser as Parser;
@@ -41,7 +40,7 @@ class Converter {
     function get_result(): array {
         $result = $this->parse_head() . $this->parse_body() . '[/indent]';
 
-        return [$this->simplify($result), $this->contents];
+        return [self::simplify($result), $this->contents];
     }
 
     // Utility functions.
@@ -53,17 +52,9 @@ class Converter {
         return str_starts_with($text, '  ') ? $node->text : $text;
     }
 
-        return $ret;
-    }
-
-    private function parse_body(): string {
-        $footer = $this->convert($this->dom->findOne('.attribution__details'));
-
-        return $this->unwrap($this->dom->findOne(".article-body")) . $footer;
-    }
-
-    private function simplify(string $content): string {
+    private static function simplify(string $content): string {
         do {
+            // delete empty tags
             $ret = $content;
             $content = preg_replace('/\[(\w+)(?:=\w+)?](\s*)\[\/\1]/', '\2', $ret);
         } while ($content !== $ret);
@@ -71,9 +62,13 @@ class Converter {
         return $ret;
     }
 
+    private static function src_url(string $url): string {
+        return str_starts_with($url, '/') ? 'https://www.minecraft.net' . $url : $url;
+    }
+
     private function count(Node $node): string {
         $this->contents[] = $node->text;
-        return '{' . $this->counter++ . '}';
+        return '{{' . $this->counter++ . '}}';
     }
 
     private function unwrap(Node $node): string {
@@ -84,15 +79,33 @@ class Converter {
         return $ret;
     }
 
-    private function src_url(string $url): string {
-        return str_starts_with($url, '/') ? 'https://www.minecraft.net' . $url : $url;
+    private function parse_head(): string {
+        $ret = '[postbg]bg5.png[/postbg][indent]';
+
+        $img = $this->dom->findOne('.article-head__image');
+        if (!($img instanceof NullNode)) {
+            $ret .= $this->convert($img);
+        }
+
+        return $ret;
+    }
+
+    private function parse_body(): string {
+        $footer = $this->convert($this->dom->findOne('.attribution__details'));
+
+        return $this->unwrap($this->dom->findOne('.article-body')) . '[/indent]' . $footer;
+    }
+
+    private function complete(): string {
+        $this->completed = true;
+        return '';
     }
 
     // Convert functions.
     private function a(Node $node): string {
-        $url = $this->src_url($node->getAttribute('href'));
+        $url = self::src_url($node->getAttribute('href'));
         $unwrapped = $this->unwrap($node);
-        return $url ? " [url=$url][color=#388d40]" . $unwrapped . '[/color][/url] ' : $unwrapped;
+        return $url ? " [url=$url][color=#388d40]" . $unwrapped . '[/color][/url]' : $unwrapped;
     }
 
     private function b(Node $node): string {
@@ -112,7 +125,6 @@ class Converter {
     }
 
     private function code(Node $node): string {
-
         return '[backcolor=White][font=' . self::MONOSPACED . ']'
             . $this->unwrap($node)
             . '[/font][/backcolor]';
@@ -122,13 +134,14 @@ class Converter {
         $ret = $this->unwrap($node);
         $cl = $node->classList;
 
-        if ($cl->contains('article-social') || $cl->contains("preloader")) {
+        if ($cl->contains('article-social') || $cl->contains('preloader')) {
             return '';
         } elseif ($cl->contains('article-image-carousel__caption')) {
             // Image description
             $ret = preg_replace('/\n/', '', $ret);
             return "[/indent][align=center][b]{$ret}[/b][/align][indent]\n";
         } elseif ($cl->contains('video')) {
+            // test needed
             return "\n[/indent][align=center]
             【REPLACE HTTPS URL[media]XXX[/media]】[/align][indent]\n";
         } elseif ($cl->contains('quote') || $cl->contains('attributed-quote')) {
@@ -190,7 +203,7 @@ class Converter {
             return $this->complete();
         }
 
-        $src = $this->src_url($node->getAttribute('src'));
+        $src = self::src_url($node->getAttribute('src'));
 
         if ($node->classList->contains('attributed-quote__image'))
             // SPX: Attributed quote author avatar.
@@ -214,10 +227,10 @@ class Converter {
     private function p(Node $node): string {
         $ret = $this->unwrap($node);
 
-        if (empty(trim($ret))) return '';
+        if (empty($ret)) return '';
 
         if ($node->classList->contains('lead')) {
-            return "[size=4][b][size=2][color=Silver]{$ret}[/color][/size][/b][/size]\n[size=4][b]"
+            return "[size=2][b][color=Silver]{$ret}[/color][/b][/size]\n[size=4][b]"
                 . $this->count($node)
                 . "[/b][/size]\n\n[size=3][color=DimGray]"
                 . $this->author
@@ -248,9 +261,7 @@ class Converter {
     }
 
     private function tbody(Node $node): string {
-        return "\n[table]\n"
-            . $this->unwrap($node)
-            . "[/table]\n";
+        return "\n[table]\n" . $this->unwrap($node) . "[/table]\n";
     }
 
     private function td(Node $node): string {
