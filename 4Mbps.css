@@ -1,0 +1,52 @@
+:root {
+    --4Mbps-text-color: #b8cadb;
+    --4Mbps-background-color: #2a2c42;
+
+    --4Mbps-table-border-color: var(--4Mbps-text-color);
+}
+
+* {
+    font-size: large;
+}
+
+body {
+    background-color: var(--4Mbps-background-color);
+    color: var(--4Mbps-text-color);
+    font-family: Avenir, sans-serif;
+    align-items: center;
+}
+
+div {
+    margin: 1em;
+}
+
+div.div-input {
+    color: white;
+    background: black;
+}
+
+div.div-input > div {
+    margin: initial;
+}
+
+a {
+    color: aqua;
+    font-weight: bold;
+}
+
+table {
+    border: var(--4Mbps-table-border-color) 1px dashed;
+}
+
+table, th, td {
+    padding: .3em;
+}
+
+.invert {
+    text-align: center;
+    color: var(--4Mbps-background-color);
+    background-color: var(--4Mbps-text-color);
+    border: 0;
+    border-radius: 3px;
+    font-weight: bolder;
+}
