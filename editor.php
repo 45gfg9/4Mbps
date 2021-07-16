@@ -81,9 +81,7 @@ EO4;
             const id = b.getAttribute('data-id')
             const text = b.querySelector('.div-input').textContent.trim()
 
-            const suffix = text ? '' : '\n'
-
-            ret = ret.replace(`{{${id}}}` + suffix, text)
+            ret = ret.replace(`{{${id}}}`, text)
         })
         const output = document.getElementById('formatted')
         output.textContent = ret
