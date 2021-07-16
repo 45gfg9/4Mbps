@@ -33,12 +33,17 @@ $articles = get_articles();
         <tbody>
         <?php
         foreach ($articles as $timestamp => $article) {
+            $categories = $article['categories'];
             echo '<tr>';
             echo "<td hidden>$timestamp</td>";
-            echo '<td>' . join(': ', $article['categories']) . '</td>';
+            echo '<td>'
+                . '<b>' . $categories[0] . '</b>';
+            if (count($categories) > 1)
+                echo '<i>: '. join(': ', array_slice($categories, 1)) . '</i>';
+            echo '</td>';
             echo "<td><a class='title' href='${article['url']}' target='_blank'>${article['title']}</td>";
             echo '<td>' . date_format($article['date'], 'Y-m-d h:m:s') . '</td>';
-            echo "<td><button class='invert take'>Take</button></td>";
+            echo "<td><button class='invert take'>Take!</button></td>";
             echo '</tr>';
         }
         ?>
