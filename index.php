@@ -51,13 +51,12 @@ $articles = get_articles();
             $categories = $article['categories'];
             echo '<tr>';
             echo "<td hidden>$timestamp</td>";
-            echo '<td>'
-                . '<b>' . $categories[0] . '</b>';
+            echo '<td><b>' . $categories[0] . '</b>';
             if (count($categories) > 1)
                 echo '<i>: ' . join(': ', array_slice($categories, 1)) . '</i>';
             echo '</td>';
-            echo "<td><a class='title' href='${article['url']}' target='_blank'>${article['title']}</td>";
-            echo '<td>' . date_format($article['date'], 'Y-m-d h:m:s') . '</td>';
+            echo "<td class='title'><a class='title' href='${article['url']}' target='_blank'>${article['title']}</a></td>";
+            echo '<td class="date">' . date_format($article['date'], 'Y-m-d h:m:s') . '</td>';
             echo "<td><button class='invert take'>Take!</button></td>";
             echo '</tr>';
         }
@@ -66,44 +65,75 @@ $articles = get_articles();
     </table>
 </div>
 <div>
-    <fieldset>
-        <legend>Not in the list?</legend>
-        <table style="border: initial">
-            <tbody>
-            <tr>
-                <td><label for="url-in">URL:&nbsp;</label></td>
-                <td><input type="url" id="url-in" size="50" placeholder="<?php echo HOST ?>/en-us/article/"
-                           pattern="<?php echo HOST . PATH_PREFIX ?>.*"></td>
-            </tr>
-            <tr>
-                <td><label for="title-in">Title: </label></td>
-                <td><input type="text" id="title-in"></td>
-            </tr>
-            <tr>
-                <td><label for="date-in">Date: </label></td>
-                <td><input type="date" id="date-in"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <button class="invert" id="custom-go" type="submit">Go!</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </fieldset>
+    <form name="custom" action="editor.php" method="post">
+        <input type="hidden" name="translator">
+        <fieldset>
+            <legend>Not in the list?</legend>
+            <table style="border: initial">
+                <tbody>
+                <tr>
+                    <td><label for="url-in">URL:&nbsp;</label></td>
+                    <td><input type="url" name="path" id="url-in" size="50"
+                               placeholder="<?php echo HOST ?>/en-us/article/"
+                               pattern="<?php echo HOST . PATH_PREFIX ?>.*" required></td>
+                </tr>
+                <tr>
+                    <td><label for="title-in">Title: </label></td>
+                    <td><input type="text" name="title" id="title-in" required></td>
+                </tr>
+                <tr>
+                    <td><label for="date-in">Date: </label></td>
+                    <td><input type="date" name="date" id="date-in" required></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="invert" id="custom-go" type="submit">Go!</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </form>
 </div>
 <script type="text/javascript">
+    const HOST = '<?php echo HOST ?>'
+    const PATH_PREFIX = '<?php echo PATH_PREFIX ?>'
+
+    const form = document.forms['custom']
+
+    function getPath(url) {
+        if (!url.startsWith(HOST + PATH_PREFIX))
+            throw 'Given URL is not a valid minecraft.net article!'
+        return url.substr(HOST.length)
+    }
+
+    function getTranslator() {
+        return document.getElementById('translator').value || '<Anonymous>'
+    }
+
     document.querySelectorAll('button.take').forEach((b) => {
         b.addEventListener('click', () => {
-            const url = b.parentNode.parentNode.querySelector('a').getAttribute('href')
-            // TODO
+            const tr = b.parentNode.parentNode
+            const path = tr.querySelector('a.title').href
+            const title = tr.querySelector('td.title').textContent
+            const date = tr.querySelector('td.date').textContent.substr(0, 10)
+
+            form.path.value = getPath(path)
+            form.title.value = title
+            form.date.value = date
+
+            form.translator.value = getTranslator()
+
+            form.submit()
         })
     })
 
-    document.getElementById('custom-go').addEventListener('click', () => {
-        const url = document.getElementById('url-in').value
-        // TODO
+    form.addEventListener('submit', () => {
+        form.translator.value = getTranslator()
+
+        const urlInput = form.querySelector('#url-in')
+        urlInput.value = getPath(urlInput.value)
     })
 </script>
 </body>

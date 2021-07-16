@@ -6,13 +6,22 @@ require '4Mbps.php';
 
 use voku\helper\HtmlDomParser;
 
-if (isset($_GET['url'])) {
+if (isset($_POST['path'])) {
     // TODO cache page
-    $url = $_GET['url'];
-    assert(str_starts_with($url, PATH_PREFIX), 'Invalid path');
+    // TODO more elegant form data passing
+    $path = $_POST['path'];
+    assert(str_starts_with($path, PATH_PREFIX), 'Invalid path');
 
-    $article = get_articles()[HOST . $url];
-    $dom = HtmlDomParser::file_get_html($article['url']);
+    $dom = HtmlDomParser::file_get_html(HOST . $path);
+
+    $title = $_POST['title'];
+    $translator = $_POST['translator'];
+    try {
+        $dt = new DateTime($_POST['dt']);
+    } catch (Exception $e) {
+        http_response_code(403);
+        die('Invalid DateTime provided');
+    }
 } else if (defined('DEV')) {
    die('DEBUG ENVIRONMENT DISABLED');
 } else {
@@ -20,11 +29,7 @@ if (isset($_GET['url'])) {
     die();
 }
 
-$result = (new Converter("Around the Block: Basalt Deltas",
-    "/en-us/article/around-block--basalt-deltas",
-    "45gfg9",
-    new DateTime("13 August 2020 14:45:03 UTC"),
-    $dom))->get_result();
+$result = (new Converter($title, HOST . $path, $translator, $dt, $dom))->get_result();
 ?>
 <!DOCTYPE HTML>
 <html lang="zh">
