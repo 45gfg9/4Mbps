@@ -5,9 +5,12 @@ const API = HOST . '/content/minecraft-net/_jcr_content.articles.grid';
 
 const DEV = 0;
 
-function request(string $url): string {
+function request(string $url, array $curl_opts = null): string {
     $req = curl_init($url);
     curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
+    if (!is_null($curl_opts))
+        foreach ($curl_opts as $k => $v)
+            curl_setopt($req, $k, $v);
     $ret = curl_exec($req);
     curl_close($req);
 
