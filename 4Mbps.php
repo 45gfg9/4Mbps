@@ -21,7 +21,7 @@ function request(string $url, array $curl_opts = null): string {
 function read_api(): array {
     // TODO cache API
     if (defined('DEV')) {
-        $json = file_get_contents('api.json');
+        die('DEBUG ENVIRONMENT DISABLED');
     } else {
         $json = request(API);
     }
