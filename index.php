@@ -45,13 +45,16 @@ $articles = get_articles();
         <tbody>
         <?php
         foreach ($articles as $timestamp => $article) {
+            if (!str_starts_with($article['url'], HOST . PATH_PREFIX))
+                continue;
+
             $categories = $article['categories'];
             echo '<tr>';
             echo "<td hidden>$timestamp</td>";
             echo '<td>'
                 . '<b>' . $categories[0] . '</b>';
             if (count($categories) > 1)
-                echo '<i>: '. join(': ', array_slice($categories, 1)) . '</i>';
+                echo '<i>: ' . join(': ', array_slice($categories, 1)) . '</i>';
             echo '</td>';
             echo "<td><a class='title' href='${article['url']}' target='_blank'>${article['title']}</td>";
             echo '<td>' . date_format($article['date'], 'Y-m-d h:m:s') . '</td>';
@@ -70,7 +73,7 @@ $articles = get_articles();
             <tr>
                 <td><label for="url-in">URL:&nbsp;</label></td>
                 <td><input type="url" id="url-in" size="50" placeholder="<?php echo HOST ?>/en-us/article/"
-                           pattern="<?php echo HOST ?>/en-us/article/.*"></td>
+                           pattern="<?php echo HOST . PATH_PREFIX ?>.*"></td>
             </tr>
             <tr>
                 <td><label for="title-in">Title: </label></td>

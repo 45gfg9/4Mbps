@@ -1,6 +1,7 @@
 <?php
 
 const HOST = 'https://www.minecraft.net';
+const PATH_PREFIX = '/en-us/article/';
 const API = HOST . '/content/minecraft-net/_jcr_content.articles.grid';
 
 const DEV = 0;
