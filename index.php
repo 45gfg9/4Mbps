@@ -17,16 +17,28 @@ $articles = get_articles();
         color: inherit;
         font-weight: inherit;
     }
+
+    fieldset {
+        border: var(--4Mbps-text-color) 1px dashed;
+    }
+
+    b, strong {
+        color: white;
+    }
 </style>
 <body>
 <div>
+    <div>
+        <label for="translator">Your name:&nbsp;</label>
+        <input type="text" id="translator">
+    </div>
     <table>
         <thead>
         <tr>
             <th hidden>Unix timestamp</th>
             <th>Category</th>
             <th>Title</th>
-            <th>Date</th>
+            <th>Time</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -51,21 +63,44 @@ $articles = get_articles();
     </table>
 </div>
 <div>
-    <label for="url-in">... Or provide your URL:&nbsp;</label>
-    <input type="text" id="url-in" size="50">
-    <button class="invert" id="custom-go" type="submit">Go</button>
+    <fieldset>
+        <legend>Not in the list?</legend>
+        <table style="border: initial">
+            <tbody>
+            <tr>
+                <td><label for="url-in">URL:&nbsp;</label></td>
+                <td><input type="url" id="url-in" size="50" placeholder="<?php echo HOST ?>/en-us/article/"
+                           pattern="<?php echo HOST ?>/en-us/article/.*"></td>
+            </tr>
+            <tr>
+                <td><label for="title-in">Title: </label></td>
+                <td><input type="text" id="title-in"></td>
+            </tr>
+            <tr>
+                <td><label for="date-in">Date: </label></td>
+                <td><input type="date" id="date-in"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button class="invert" id="custom-go" type="submit">Go!</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </fieldset>
 </div>
 <script type="text/javascript">
-    document.querySelector('#custom-go').addEventListener('click', () => {
-        const input = document.querySelector('#url-in').value
-        // TODO
-    })
-
     document.querySelectorAll('button.take').forEach((b) => {
         b.addEventListener('click', () => {
-            const timestamp = b.parentNode.parentNode.firstChild.textContent;
+            const url = b.parentNode.parentNode.querySelector('a').getAttribute('href')
             // TODO
         })
+    })
+
+    document.getElementById('custom-go').addEventListener('click', () => {
+        const url = document.getElementById('url-in').value
+        // TODO
     })
 </script>
 </body>
