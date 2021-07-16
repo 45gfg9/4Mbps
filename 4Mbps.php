@@ -18,7 +18,12 @@ function request(string $url, array $curl_opts = null): string {
 }
 
 function read_api(): array {
-    $json = defined('DEV') ? file_get_contents('api.json') : request(API);
+    // TODO cache API
+    if (defined('DEV')) {
+        $json = file_get_contents('api.json');
+    } else {
+        $json = request(API);
+    }
     return json_decode($json, true);
 }
 
