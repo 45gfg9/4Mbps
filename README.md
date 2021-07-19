@@ -1,6 +1,7 @@
 # 4Mbps
 
 ![License](https://img.shields.io/github/license/45gfg9/4Mbps.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/45gfg9/4Mbps/badge)](https://www.codefactor.io/repository/github/45gfg9/4Mbps)
 
 > *45gfg9's Minecraft Blog ParSer*
 
@@ -18,3 +19,8 @@ This project is inspired by and largely based on [SPX](https://github.com/SPGodi
 Huge shout out to [SPGoding](https://github.com/SPGoding) and his fantastic project!
 
 Written with PhpStorm.
+
+## Never Asked Question
+> Why don't you just fork SPX?
+
+Because I can't write TypeScript.
