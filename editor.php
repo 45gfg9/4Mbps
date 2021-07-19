@@ -90,6 +90,15 @@ EO4;
         return ret
     }
 
+    document.querySelectorAll('.div-input').forEach((b) => {
+        b.addEventListener('paste', (e) => {
+            e.preventDefault()
+            const text = e.clipboardData.getData('text/plain')
+            // execCommand is obsolete. Is there a better way?
+            document.execCommand('insertText', false, text)
+        })
+    })
+
     new ClipboardJS('#get-result', {text: getBBCode})
 </script>
 </body>
