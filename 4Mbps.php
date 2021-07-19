@@ -39,6 +39,7 @@ function parse_api(array $raw_articles): array {
         $entry['categories'] = $raw_article['categories'];
         $entry['url'] = HOST . $raw_article['article_url'];
         $date = date_create($raw_article['publish_date']);
+        date_timezone_set($date, timezone_open('Asia/Shanghai'));
         $entry['date'] = $date;
         $articles[date_timestamp_get($date)] = $entry;
     }

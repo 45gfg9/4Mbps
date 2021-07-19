@@ -56,7 +56,7 @@ $articles = get_articles();
                 echo '<i>: ' . join(': ', array_slice($categories, 1)) . '</i>';
             echo '</td>';
             echo "<td class='title'><a class='title' href='${article['url']}' target='_blank'>${article['title']}</a></td>";
-            echo '<td class="date">' . date_format($article['date'], 'Y-m-d h:m:s') . '</td>';
+            echo '<td class="date">' . date_format($article['date'], 'Y-m-d H:i:s') . '</td>';
             echo "<td><button class='invert take'>Take!</button></td>";
             echo '</tr>';
         }
@@ -103,9 +103,11 @@ $articles = get_articles();
     const form = document.forms['custom']
 
     function getPath(url) {
-        if (!url.startsWith(HOST + PATH_PREFIX))
+        if (url.startsWith(HOST))
+            url = url.substr(HOST.length)
+        if (!url.startsWith(PATH_PREFIX))
             throw 'Given URL is not a valid minecraft.net article!'
-        return url.substr(HOST.length)
+        return url
     }
 
     function getTranslator() {
