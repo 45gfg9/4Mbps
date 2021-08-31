@@ -1,9 +1,9 @@
 <?php
 
 require_once 'vendor/autoload.php';
-require 'Converter.php';
-require '4Mbps.php';
-require 'spx_api.php';
+require_once 'Converter.php';
+require_once '4Mbps.php';
+require_once 'spx_api.php';
 
 use voku\helper\HtmlDomParser;
 

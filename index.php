@@ -1,8 +1,3 @@
-<?php
-require '4Mbps.php';
-
-$articles = get_articles();
-?>
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -44,7 +39,9 @@ $articles = get_articles();
         </thead>
         <tbody>
         <?php
-        foreach ($articles as $timestamp => $article) {
+        require_once '4Mbps.php';
+
+        foreach (get_articles() as $timestamp => $article) {
             if (!str_starts_with($article['url'], HOST . PATH_PREFIX))
                 continue;
 

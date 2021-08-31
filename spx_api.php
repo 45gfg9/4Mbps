@@ -2,7 +2,7 @@
 
 namespace spx;
 
-require '4Mbps.php';
+require_once '4Mbps.php';
 
 function translate_bug(string|array $id): array {
     // Bug translations provided by SPX
