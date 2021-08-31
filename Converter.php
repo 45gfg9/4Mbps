@@ -135,8 +135,8 @@ class Converter {
         $ret = $this->unwrap($node);
         $cl = $node->classList;
 
-        if ($cl->contains('article-social') || $cl->contains('preloader')) {
-            return '';
+        if ($cl->contains('article-attribution-container')) {
+            return $this->complete();
         } elseif ($cl->contains('article-image-carousel__caption')) {
             // Image description
             $ret = preg_replace('/\n/', '', $ret);
@@ -273,11 +273,17 @@ class Converter {
         return '[tr]' . $this->unwrap($node) . '[/tr]';
     }
 
+    private function u(Node $node): string {
+        return $this->unwrap($node);
+    }
+
     private function ul(Node $node): string {
         return "\n[list]\n" . $this->unwrap($node) . "[/list]\n";
     }
 
     private function convert(Node $node): string {
+        // TODO cannot write like this, needs a higher abstraction for rendering
+
         // More magical impl in less than 20 lines.
         // By KawaiiZapic
 
@@ -291,12 +297,12 @@ class Converter {
         return match ($tag) {
             'a', 'b', 'blockquote', 'br', 'cite', 'code',
             'div', 'dd', 'dl', 'i', 'img', 'li', 'ol',
-            'p', 'span', 'table', 'tbody', 'td', 'tr', 'ul' => $this->$tag($node),
+            'p', 'span', 'table', 'tbody', 'td', 'tr', 'u', 'ul' => $this->$tag($node),
             'h1', 'h2', 'h3', 'h4', 'h5' => $this->h(substr($tag, 1), $node),
             'dt', 'script', 'button', 'nav', 'svg' => '',
             '#text', 'picture' => self::get_text($node),
             // print_r always return true
-            default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with <{$node->tag}> tag.</b>") ? self::get_text($node) : '')
+            default => (print_r("<b style='color: Red'>Warning: 4Mbps does not know how to deal with {$node->tag} tag.</b>") ? self::get_text($node) : '')
         };
     }
 }
