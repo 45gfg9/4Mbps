@@ -2,6 +2,8 @@
 
 namespace spx;
 
+// Bon voyage, SPGoding.
+
 require_once '4Mbps.php';
 
 function translate_bug(string|array $id): array {

@@ -15,12 +15,9 @@ Currently, PHP 8.0 is required. (yes, for that syntax sugar)
 
 ## Credits
 
+> **Bon voyage, SPGoding.**
+
 This project is inspired by and largely based on [SPX](https://github.com/SPGoding/spx).
 Huge shout out to [SPGoding](https://github.com/SPGoding) and his fantastic project!
 
 Written with PhpStorm.
-
-## Never Asked Question
-> Why don't you just fork SPX?
-
-Because I can't write TypeScript.
