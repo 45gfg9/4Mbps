@@ -1,5 +1,6 @@
 <?php
 /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use voku\helper\HtmlDomParser as Parser;
@@ -47,7 +48,7 @@ class Converter {
     private static function get_text(Node $node): string {
         // SimpleHtmlDomInterface::text -> whitespaces trimmed
         // DOMDocument::textContent -> weird macros
-        // This is not very graceful..
+        // This is not very graceful...
         $text = str_replace(["\r", "\n", "\t"], '', voku\helper\AbstractDomParser::putReplacedBackToPreserveHtmlEntities($node->getNode()->textContent));
         return str_starts_with($text, '  ') ? $node->text : $text;
     }

@@ -11,7 +11,7 @@ Yet another Minecraft blog parser.
 
 ## Note
 
-Currently, PHP 8.0 is required.
+Currently, PHP 8.0 is required. (yes, for that syntax sugar)
 
 ## Credits
 

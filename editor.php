@@ -13,20 +13,21 @@ if (isset($_POST['path'])) {
     $path = $_POST['path'];
     assert(str_starts_with($path, PATH_PREFIX), 'Invalid path');
 
-    $dom = HtmlDomParser::file_get_html(HOST . $path);
+//    $dom = HtmlDomParser::file_get_html(HOST . $path);
+    $dom = HtmlDomParser::str_get_html(request(HOST . $path));
 
     $title = $_POST['title'];
     $translator = $_POST['translator'];
     try {
-        $dt = new DateTime($_POST['dt']);
+        $dt = new DateTime($_POST['date']);
     } catch (Exception $e) {
-        http_response_code(403);
+        http_response_code(400);
         die('Invalid DateTime provided');
     }
 } else if (defined('DEV')) {
-   die('DEBUG ENVIRONMENT DISABLED');
+    die('DEBUG ENVIRONMENT DISABLED');
 } else {
-    http_response_code(403);
+    http_response_code(400);
     die();
 }
 
@@ -100,7 +101,7 @@ EO4;
         })
     })
 
-    new ClipboardJS('#get-result', {text: getBBCode})
+    new ClipboardJS('#get-result', { text: getBBCode })
 </script>
 </body>
 </html>
