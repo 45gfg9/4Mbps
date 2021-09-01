@@ -9,9 +9,14 @@ Yet another Minecraft blog parser.
 
 **This is an experimental project.**
 
-## Note
+## Usage & Note
 
 Currently, PHP 8.0 is required. (yes, for that syntax sugar)
+
+To use 4Mbps on macOS / Linux, `git clone` this repository and `cd`.
+Run `php -S localhost:8080`, or use your preferred PHP server.
+
+To use 4Mbps on Windows, please figure it out by yourself.
 
 ## Credits
 
