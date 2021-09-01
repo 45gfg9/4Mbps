@@ -274,7 +274,7 @@ class Converter {
     }
 
     private function u(Node $node): string {
-        return $this->unwrap($node);
+        return '[u]' . $this->unwrap($node) . '[/u]';
     }
 
     private function ul(Node $node): string {
