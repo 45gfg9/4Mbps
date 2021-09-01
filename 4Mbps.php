@@ -4,8 +4,6 @@ const HOST = 'https://www.minecraft.net';
 const PATH_PREFIX = '/en-us/article/';
 const API = HOST . '/content/minecraft-net/_jcr_content.articles.grid';
 
-const DEV = 0;
-
 function request(string $url, array $curl_opts = null): string {
     $req = curl_init($url);
     curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
