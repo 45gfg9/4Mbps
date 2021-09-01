@@ -42,8 +42,26 @@ $result = (new Converter($title, HOST . $path, $translator, $dt, $dom))->get_res
     <title>4Mbps Editor</title>
     <link rel="stylesheet" href="4Mbps.css">
     <style>
+        div.entry-block {
+            position: relative;
+            border-bottom: #b8cadb solid 1px;
+        }
+
         div.word-block {
+            /*display: inline-block;*/
             margin: 1em;
+            padding-right: 6em;
+        }
+
+        div.tag {
+            /*display: inline-block;*/
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 3em;
+            margin: initial;
+            color: #4f5062;
+            z-index: -1;
         }
 
         div.result {
@@ -60,15 +78,17 @@ $result = (new Converter($title, HOST . $path, $translator, $dt, $dom))->get_res
 <div><?php
     foreach ($result[1] as $i => $text) {
         echo <<< EO4
+<div class="entry-block">
 <div class="word-block" data-id="$i">
 <p><span>$text</span></p>
 <div class="div-input" contenteditable="true"></div>
-</div><br>
+</div>
+<div class="tag">Tag</div>
+</div>
 EO4;
     }
     ?>
 </div>
-<hr>
 <div class="result">
     <button class="invert" id="get-result">Get Result!</button>
     <pre id="formatted" contenteditable="true" hidden></pre>
