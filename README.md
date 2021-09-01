@@ -23,6 +23,6 @@ To use 4Mbps on Windows, please figure it out by yourself.
 > **Bon voyage, SPGoding.**
 
 This project is inspired by and largely based on [SPX](https://github.com/SPGoding/spx).
-Huge shout out to [SPGoding](https://github.com/SPGoding) and his fantastic project!
+Huge shout out to [SPGoding](https://github.com/SPGoding) and their fantastic project!
 
 Written with PhpStorm.
