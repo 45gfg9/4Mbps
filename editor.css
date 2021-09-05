@@ -1,0 +1,30 @@
+div.entry-block {
+    position: relative;
+    border-bottom: #b8cadb solid 1px;
+}
+
+div.word-block {
+    /*display: inline-block;*/
+    margin: 1em;
+    padding-right: 6em;
+}
+
+div.tag {
+    /*display: inline-block;*/
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 3em;
+    margin: initial;
+    color: #4f5062;
+    z-index: -1;
+}
+
+div.result {
+    text-align: center;
+}
+
+#formatted {
+    text-align: initial;
+    font-size: initial;
+}

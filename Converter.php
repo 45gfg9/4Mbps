@@ -3,6 +3,8 @@
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
+require_once 'vendor/autoload.php';
+
 use voku\helper\HtmlDomParser as Parser;
 use voku\helper\SimpleHtmlDomBlank as NullNode;
 use voku\helper\SimpleHtmlDomInterface as Node;

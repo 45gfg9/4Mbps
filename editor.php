@@ -1,6 +1,5 @@
 <?php
 
-require_once 'vendor/autoload.php';
 require_once 'Converter.php';
 require_once '4Mbps.php';
 require_once 'spx_api.php';
@@ -41,38 +40,7 @@ $result = (new Converter($title, HOST . $path, $translator, $dt, $dom))->get_res
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>4Mbps Editor</title>
     <link rel="stylesheet" href="4Mbps.css">
-    <style>
-        div.entry-block {
-            position: relative;
-            border-bottom: #b8cadb solid 1px;
-        }
-
-        div.word-block {
-            /*display: inline-block;*/
-            margin: 1em;
-            padding-right: 6em;
-        }
-
-        div.tag {
-            /*display: inline-block;*/
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 3em;
-            margin: initial;
-            color: #4f5062;
-            z-index: -1;
-        }
-
-        div.result {
-            text-align: center;
-        }
-
-        #formatted {
-            text-align: initial;
-            font-size: initial;
-        }
-    </style>
+    <link rel="stylesheet" href="editor.css">
 </head>
 <body>
 <div><?php
