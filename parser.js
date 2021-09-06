@@ -1,8 +1,49 @@
 const tree = JSON.parse(document.getElementById('tree').textContent)
 
-function crE() { return document.createElement(...arguments) }
+function crE(tag, ...classes) {
+    const e = document.createElement(tag)
 
-function crT() { return document.createTextNode(...arguments) }
+    e.classList.add(...classes)
+
+    return e
+}
+
+function crT(text) {
+    return document.createTextNode(text)
+}
+
+function createDivInputBlock(e) {
+    const div = crE('div', 'word-block')
+    const p = crE('p')
+    p.appendChild(crT(e.value))
+    div.appendChild(p)
+
+    if (e['ignore'] === undefined) {
+        const input = crE('div', 'div-input')
+        input.contentEditable = true
+        div.appendChild(input)
+    }
+
+    return div
+}
+
+function createLabelInputBlock(key) {
+    const div = crE('div')
+
+    const label = crE('label')
+    const u = crE('u')
+    u.appendChild(crT(key))
+    label.appendChild(u)
+    label.appendChild(crT(': '))
+
+    const input = crE('input', 'attr-input')
+    input.contentEditable = true
+
+    div.appendChild(label)
+    div.appendChild(input)
+
+    return div
+}
 
 const rootDiv = crE('div')
 rootDiv.id = 'root-div'
@@ -16,44 +57,34 @@ Node.prototype.apply4Mbps = function (body) {
 
 // what the f is this.
 function construct(e) {
-    const div = crE('div')
-    div.classList.add('entry-block')
-
+    const entryBlock = crE('div', 'entry-block')
+    const body = e.body
     let tag = e.tag
+
+    delete e.body
     delete e.tag
 
     if (tag === null) {
-        const wordDiv = crE('div')
-        wordDiv.appendChild(crT(e.value))
-        if (e.ignore !== undefined) {
-            wordDiv.classList.add('word-block')
-            wordDiv.appendChild(crE('input'))
-        }
-        return wordDiv
+        return createDivInputBlock(e)
+    } else if (tag === 'header') {
+        tag = 'h' + e['level']
+        delete e['level']
     }
 
-    const body = e.body
-    delete e.body
+    entryBlock.setAttribute('data-tag', tag)
 
-    if (tag === 'header') {
-        tag = 'h' + e.level
-        delete e.level
+    // make tag
+    const tagDiv = crE('div', 'tag')
+    tagDiv.appendChild(crT(tag))
+    entryBlock.appendChild(tagDiv)
+
+    for (const tag in e) {
+        entryBlock.appendChild(createLabelInputBlock(tag))
     }
 
-    const tagDiv = crE('div')
-    tagDiv.textContent = tag
-    tagDiv.classList.add('tag')
-    div.appendChild(tagDiv)
+    body && entryBlock.apply4Mbps(body)
 
-    for (const key in e) {
-        const label = crE('label')
-        const input = crE('input')
-        label.appendChild(crT(key + ": "))
-        label.appendChild(input)
-        div.appendChild(label)
-    }
-
-    return div.apply4Mbps(body)
+    return entryBlock
 }
 
 document.getElementById('editor')
