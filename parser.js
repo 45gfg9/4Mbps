@@ -1,10 +1,10 @@
-const tree = JSON.parse(document.getElementById('tree').textContent)
+'use strict';
+
+const docTree = JSON.parse(document.getElementById('doc-tree').textContent)
 
 function crE(tag, ...classes) {
     const e = document.createElement(tag)
-
     e.classList.add(...classes)
-
     return e
 }
 
@@ -13,7 +13,7 @@ function crT(text) {
 }
 
 function createDivInputBlock(e) {
-    const div = crE('div', 'word-block')
+    const div = crE('div', 'tr-unit')
     const p = crE('p')
     p.appendChild(crT(e.value))
     div.appendChild(p)
@@ -28,7 +28,7 @@ function createDivInputBlock(e) {
 }
 
 function createLabelInputBlock(key) {
-    const div = crE('div')
+    const div = crE('div', 'attribute')
 
     const label = crE('label')
     const u = crE('u')
@@ -45,6 +45,12 @@ function createLabelInputBlock(key) {
     return div
 }
 
+function createTagDiv(tag) {
+    const tagDiv = crE('div', 'tag')
+    tagDiv.appendChild(crT(tag))
+    return tagDiv
+}
+
 const rootDiv = crE('div')
 rootDiv.id = 'root-div'
 
@@ -57,7 +63,7 @@ Node.prototype.apply4Mbps = function (body) {
 
 // what the f is this.
 function construct(e) {
-    const entryBlock = crE('div', 'entry-block')
+    const entryBlock = crE('div', 'entry')
     const body = e.body
     let tag = e.tag
 
@@ -73,10 +79,7 @@ function construct(e) {
 
     entryBlock.setAttribute('data-tag', tag)
 
-    // make tag
-    const tagDiv = crE('div', 'tag')
-    tagDiv.appendChild(crT(tag))
-    entryBlock.appendChild(tagDiv)
+    entryBlock.appendChild(createTagDiv(tag))
 
     for (const tag in e) {
         entryBlock.appendChild(createLabelInputBlock(tag))
@@ -88,4 +91,4 @@ function construct(e) {
 }
 
 document.getElementById('editor')
-    .appendChild(rootDiv.apply4Mbps(tree.body))
+    .appendChild(rootDiv.apply4Mbps(docTree.body))

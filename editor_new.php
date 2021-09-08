@@ -8,7 +8,7 @@
 </head>
 <body>
 <div id="editor"></div>
-<script id="tree" type="application/json"><?php readfile('test.json') ?></script>
+<script id="doc-tree" type="application/json"><?php readfile('test.json') ?></script>
 <script src="parser.js"></script>
 </body>
 </html>

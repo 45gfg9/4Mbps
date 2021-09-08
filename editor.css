@@ -1,9 +1,9 @@
-div.entry-block {
+div.entry {
     position: relative;
     border-bottom: #b8cadb solid 1px;
 }
 
-div.word-block {
+div.tr-unit {
     /*display: inline-block;*/
     margin: 1em;
     padding-right: 6em;
