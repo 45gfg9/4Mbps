@@ -51,6 +51,10 @@ function createTagDiv(tag) {
     return tagDiv
 }
 
+function collectAll() {
+
+}
+
 const rootDiv = crE('div')
 rootDiv.id = 'root-div'
 
