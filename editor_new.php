@@ -9,7 +9,7 @@
 <body>
 <div id="editor"></div>
 <div class="result">
-    <button class="invert" onclick="collectAll()">Get Result</button>
+    <button class="invert" onclick="collect.collect()">Get Result</button>
     <div class="result-bbcode" hidden></div>
 </div>
 <script id="doc-tree" type="application/json"><?php readfile('test.json') ?></script>
