@@ -1,26 +1,31 @@
-'use strict';
+'use strict'
 
 const docTree = JSON.parse(document.getElementById('doc-tree').textContent)
+const docBody = []
+for (let obj of docTree.body) {
+    docBody.push(obj, { tag: null, value: '\n', ignore: true })
+}
+docTree.body = docBody
 
-const pp = {
-    crE(tag, ...classes) {
+const create = {
+    element(tag, ...classes) {
         const e = document.createElement(tag)
         e.classList.add(...classes)
         return e
     },
 
-    crT(text) {
+    text(text) {
         return document.createTextNode(text)
     },
 
-    createDivInputBlock(e) {
-        const div = pp.crE('div', 'tr-unit')
-        const p = pp.crE('p')
-        p.appendChild(pp.crT(e.value))
+    divInputBlock(e) {
+        const div = create.element('div', 'tr-unit')
+        const p = create.element('p')
+        p.appendChild(create.text(e.value))
         div.appendChild(p)
 
         if (e['ignore'] === undefined) {
-            const input = pp.crE('div', 'div-input')
+            const input = create.element('div', 'div-input')
             input.contentEditable = true
             div.appendChild(input)
         }
@@ -28,22 +33,22 @@ const pp = {
         return div
     },
 
-    createTagDiv(tag) {
-        const tagDiv = pp.crE('div', 'tag')
-        tagDiv.appendChild(pp.crT(tag))
+    divTag(tag) {
+        const tagDiv = create.element('div', 'tag')
+        tagDiv.appendChild(create.text(tag))
         return tagDiv
     },
 
-    createLabelInputBlock(key) {
-        const div = pp.crE('div', 'attribute')
+    labelInputBlock(key) {
+        const div = create.element('div', 'attribute')
 
-        const label = pp.crE('label')
-        const u = pp.crE('u')
-        u.appendChild(pp.crT(key))
+        const label = create.element('label')
+        const u = create.element('u')
+        u.appendChild(create.text(key))
         label.appendChild(u)
-        label.appendChild(pp.crT(': '))
+        label.appendChild(create.text(': '))
 
-        const input = pp.crE('input', 'attr-input')
+        const input = create.element('input', 'attr-input')
         input.contentEditable = true
 
         div.appendChild(label)
@@ -54,12 +59,12 @@ const pp = {
 }
 
 const collect = {
-    collect() {
-        // TODO
+    all() {
+
     }
 }
 
-const rootDiv = pp.crE('div')
+const rootDiv = create.element('div')
 rootDiv.id = 'root-div'
 
 Node.prototype.apply4Mbps = function (body) {
@@ -71,7 +76,7 @@ Node.prototype.apply4Mbps = function (body) {
 
 // what the f is this.
 function construct(e) {
-    const entryBlock = pp.crE('div', 'entry')
+    const entryBlock = create.element('div', 'entry')
     const body = e.body
     let tag = e.tag
 
@@ -79,7 +84,7 @@ function construct(e) {
     delete e.tag
 
     if (tag === null) {
-        return pp.createDivInputBlock(e)
+        return create.divInputBlock(e)
     } else if (tag === 'header') {
         tag = 'h' + e['level']
         delete e['level']
@@ -87,10 +92,10 @@ function construct(e) {
 
     entryBlock.setAttribute('data-tag', tag)
 
-    entryBlock.appendChild(pp.createTagDiv(tag))
+    entryBlock.appendChild(create.divTag(tag))
 
     for (const tag in e) {
-        entryBlock.appendChild(pp.createLabelInputBlock(tag))
+        entryBlock.appendChild(create.labelInputBlock(tag))
     }
 
     body && entryBlock.apply4Mbps(body)
