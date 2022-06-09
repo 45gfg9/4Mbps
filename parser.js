@@ -1,58 +1,59 @@
 'use strict'
 
 const docTree = JSON.parse(document.getElementById('doc-tree').textContent)
-const docBody = []
-for (let obj of docTree.body) {
-    docBody.push(obj, { tag: null, value: '\n', ignore: true })
-}
-docTree.body = docBody
 
 const create = {
+    // create element with classes
     element(tag, ...classes) {
         const e = document.createElement(tag)
         e.classList.add(...classes)
         return e
     },
 
-    text(text) {
-        return document.createTextNode(text)
-    },
-
+    // create a div-input block for translation unit
     divInputBlock(e) {
         const div = create.element('div', 'tr-unit')
+        // the original quote
         const p = create.element('p')
-        p.appendChild(create.text(e.value))
-        div.appendChild(p)
+        p.append(e.value)
+        div.append(p)
 
-        if (e['ignore'] === undefined) {
-            const input = create.element('div', 'div-input')
-            input.contentEditable = true
-            div.appendChild(input)
-        }
+        // assert: e.ignore === undefined
+
+        // create text input div
+        const input = create.element('div', 'div-input')
+        // a better still-bad approach
+        input.contentEditable = 'plaintext-only'
+        div.append(input)
 
         return div
     },
 
+    // create a BBCode-tag indicator div
     divTag(tag) {
         const tagDiv = create.element('div', 'tag')
-        tagDiv.appendChild(create.text(tag))
+        tagDiv.append(tag)
         return tagDiv
     },
 
-    labelInputBlock(key) {
+    // create an attribute input block
+    // value: fills into input
+    attributeBlock(value, key) {
         const div = create.element('div', 'attribute')
 
-        const label = create.element('label')
-        const u = create.element('u')
-        u.appendChild(create.text(key))
-        label.appendChild(u)
-        label.appendChild(create.text(': '))
-
         const input = create.element('input', 'attr-input')
-        input.contentEditable = true
+        const label = create.element('label')
+        input.value = value
 
-        div.appendChild(label)
-        div.appendChild(input)
+        if (key !== undefined) {
+            const u = create.element('u')
+            u.append(key)
+            label.append(u)
+            label.append(': ')
+        }
+
+        div.append(label)
+        label.append(input)
 
         return div
     }
@@ -60,48 +61,86 @@ const create = {
 
 const collect = {
     all() {
+        const ret = this.entry(rootDiv)
+        console.log(ret)
 
-    }
+        const result = document.getElementById('result-bbcode')
+        result.hidden = false
+        result.innerText = ret
+    },
+
+    trUnit(unit) {
+        const p = unit.firstChild
+
+        return ''
+    },
+
+    // recursively collect
+    entry(unit) {
+        let ret = ''
+        for (const entry of unit.childNodes) {
+            if ('tr-unit' in entry.classList) {
+                ret += this.trUnit(entry)
+            } else if ('entry' in entry.classList) {
+                ret += this.entry(entry)
+            }
+        }
+
+        return ret
+    },
 }
 
-const rootDiv = create.element('div')
-rootDiv.id = 'root-div'
-
 Node.prototype.apply4Mbps = function (body) {
+    // for every body entry
     for (const e of body) {
-        this.appendChild(construct(e))
+        // handle this entry.
+        this.appendChild(buildNode(e))
     }
     return this
 }
 
-// what the f is this.
-function construct(e) {
+// Build HTML node from entry.
+function buildNode(e) {
+    // this root node.
     const entryBlock = create.element('div', 'entry')
+
+    // extract tag and body
     const body = e.body
     let tag = e.tag
 
+    // delete tag and body, leaving extra keys to process
     delete e.body
     delete e.tag
 
+    // handle tags
     if (tag === null) {
-        return create.divInputBlock(e)
+        // text
+        if (e['ignore'] === undefined) {
+            // this is a translation unit
+            return create.divInputBlock(e)
+        }
+        // else, this is an attribute
+        return create.attributeBlock(e.value)
     } else if (tag === 'header') {
+        // this is a header node
         tag = 'h' + e['level']
         delete e['level']
     }
 
-    entryBlock.setAttribute('data-tag', tag)
+    // append tag indicator
+    entryBlock.append(create.divTag(tag))
 
-    entryBlock.appendChild(create.divTag(tag))
-
+    // for every other attributes
     for (const tag in e) {
-        entryBlock.appendChild(create.labelInputBlock(tag))
+        // display them
+        entryBlock.append(create.attributeBlock(e[tag], tag))
     }
 
+    // if this node has body
     body && entryBlock.apply4Mbps(body)
 
     return entryBlock
 }
 
-document.getElementById('editor')
-    .appendChild(rootDiv.apply4Mbps(docTree.body))
+const rootDiv = document.getElementById('root-div')
+rootDiv.apply4Mbps(docTree.body)
